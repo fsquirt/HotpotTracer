@@ -26,6 +26,7 @@ def get_baidu_hotpot():
     print(req.text)
     pattern = r'<!--.*?-->'
     baidu_hotpot = re.findall(pattern, req.text)
+    print("test")
 
 
 if __name__ == '__main__':
