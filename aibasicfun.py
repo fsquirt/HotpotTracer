@@ -52,19 +52,6 @@ def init_global():
     
     return 0
 
-## 与ollama本地服务端通信
-def test_ollama():
-    try:
-        response = ollama.generate(model='qwen2.5', prompt='注意：不要生成markdown! 下面是问题:你是谁？',options=module_config)
-        logging.info(response["response"])
-        
-        response = ollama.generate(model='qwen2.5', prompt='注意：不要生成markdown! 下面是问题:你有没有感情？',options=module_config)
-        logging.info(response["response"])
-        return 0
-    except:
-        logging.info("ollama服务未启动")
-        return 1
-
 ## 检测代理设置
 def check_proxy():
     try:
@@ -78,6 +65,19 @@ def check_proxy():
             return 1
     except:
         logging.info("代理设置异常")
+        return 1
+
+## 与ollama本地服务端通信
+def test_ollama():
+    try:
+        response = ollama.generate(model='qwen2.5', prompt='注意：不要生成markdown! 下面是问题:你是谁？',options=module_config)
+        logging.info(response["response"])
+        
+        response = ollama.generate(model='qwen2.5', prompt='注意：不要生成markdown! 下面是问题:你有没有感情？',options=module_config)
+        logging.info(response["response"])
+        return 0
+    except:
+        logging.info("ollama服务未启动")
         return 1
 
 #基本功能
