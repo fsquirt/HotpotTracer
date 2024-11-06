@@ -7,7 +7,6 @@ import pyautogui
 import psutil
 import logging
 
-
 logging.basicConfig(
     level=logging.INFO,  # 设置日志级别为 DEBUG
     format='%(asctime)s - %(levelname)s - %(message)s',  # 设置日志格式
@@ -26,7 +25,7 @@ module_config ={
     "mirostat_tau" : 5.0, #控制输出之间的连贯性和多样性之间的平衡。较低的值将导致文本更加专注和连贯。（默认：5.0）
     "num_ctx num_ctx" : 2048,#设置用于生成下一个标记的上下文窗口的大小。（默认：2048）
     "repeat_last_n" : 64 , #设置模型回溯多远以防止重复。（默认：64，0 = 禁用，-1 = num_ctx）
-    "repeat_penalty" : 1.1, #设置重复的惩罚强度。更高的值（例如，1.5）将更强烈地惩罚重复，而更低的值（例如，0.9）将更加宽容。（默认：1.1）
+    "repeat_penalty" : 0.9, #设置重复的惩罚强度。更高的值（例如，1.5）将更强烈地惩罚重复，而更低的值（例如，0.9）将更加宽容。（默认：1.1）
     "temperature" : 0.7, #模型温度。提高温度会使模型回答更具创造性。（默认：0.8）
     "seed" : random.randint(1,sys.maxsize) #设置用于生成的随机数种子。将此设置为特定数字将使模型对相同的提示生成相同的文本。（默认：0）
 }
@@ -104,5 +103,3 @@ def ollama_summarize(text):
     restext = response["response"]
     logging.info("调用ollama生成概括:" + restext)
     return restext
-
-

@@ -26,12 +26,9 @@ def get_baidu_hotpot():
     print(req.status_code)
     
     req.encoding = 'utf-8'
-    #print(req.text)
     pattern = r'<!--.*?-->'
     baidu_hotpot = re.findall(pattern, req.text)
-    hotpot_oringal = baidu_hotpot[0]
-    hotpot_oringal = str(hotpot_oringal).replace("<!--s-data:","")
-    hotpot_oringal = hotpot_oringal.replace("-->","")
+    hotpot_oringal = str(baidu_hotpot[0]).replace("<!--s-data:","").replace("-->","")
     htlist = json.loads(hotpot_oringal)
     htlist = htlist["data"]["cards"][0]["content"]
 
