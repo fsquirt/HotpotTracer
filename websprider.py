@@ -2,6 +2,7 @@ import requests
 import urllib3
 import bs4 
 import re
+import json
 
 # 百度热搜
 def get_baidu_hotpot():
@@ -16,17 +17,26 @@ def get_baidu_hotpot():
         "Sec-Fetch-Mode": "navigate",
         "Sec-Fetch-User": "?1",
         "Sec-Fetch-Dest": "document",
-        "Accept-Encoding": "gzip, deflate, br",
+        #"Accept-Encoding": "gzip, deflate, br",
         "Priority": "u=0, i",
         "Connection": "keep-alive"
     }
     
     req = requests.get("https://top.baidu.com/board?tab=realtime",headers=req_header,verify=False,data=None)
+    print(req.status_code)
+    
     req.encoding = 'utf-8'
-    print(req.text)
+    #print(req.text)
     pattern = r'<!--.*?-->'
     baidu_hotpot = re.findall(pattern, req.text)
-    print("test")
+    hotpot_oringal = baidu_hotpot[0]
+    hotpot_oringal = str(hotpot_oringal).replace("<!--s-data:","")
+    hotpot_oringal = hotpot_oringal.replace("-->","")
+    htlist = json.loads(hotpot_oringal)
+    htlist = htlist["data"]["cards"][0]["content"]
+
+    for i in htlist:
+        print(i)
 
 
 if __name__ == '__main__':
