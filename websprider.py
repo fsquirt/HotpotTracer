@@ -27,7 +27,6 @@ def get_baidu_hotpot():
     }
     
     req = requests.get("https://top.baidu.com/board?tab=realtime",headers=req_header,verify=False,data=None)
-    #print(req.status_code)
     
     req.encoding = 'utf-8'
     pattern = r'<!--.*?-->'
