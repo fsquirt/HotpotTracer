@@ -6,9 +6,13 @@ import sys
 import pyautogui
 import psutil
 import logging
+import re
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 logging.basicConfig(
-    level=logging.INFO,  # 设置日志级别为 DEBUG
+    level=logging.WARNING,  # 设置日志级别为 DEBUG
     format='%(asctime)s - %(levelname)s - %(message)s',  # 设置日志格式
     datefmt='%Y-%m-%d %H:%M:%S'  # 设置时间格式
 )
@@ -23,10 +27,10 @@ module_config ={
     "mirostat" : 0, #启用 Mirostat 采样以控制困惑度。（默认：0，0 = 禁用，1 = Mirostat，2 = Mirostat 2.0）
     "mirostat_eta" : 0.1,#影响算法对生成文本反馈的响应速度。较低的学习率会导致调整速度变慢，而较高的学习率会使算法更加灵敏。（默认：0.1）
     "mirostat_tau" : 5.0, #控制输出之间的连贯性和多样性之间的平衡。较低的值将导致文本更加专注和连贯。（默认：5.0）
-    "num_ctx num_ctx" : 2048,#设置用于生成下一个标记的上下文窗口的大小。（默认：2048）
+    "num_ctx" : 2048,#设置用于生成下一个标记的上下文窗口的大小。（默认：2048）
     "repeat_last_n" : 64 , #设置模型回溯多远以防止重复。（默认：64，0 = 禁用，-1 = num_ctx）
-    "repeat_penalty" : 0.9, #设置重复的惩罚强度。更高的值（例如，1.5）将更强烈地惩罚重复，而更低的值（例如，0.9）将更加宽容。（默认：1.1）
-    "temperature" : 0.7, #模型温度。提高温度会使模型回答更具创造性。（默认：0.8）
+    "repeat_penalty" : 1.1, #设置重复的惩罚强度。更高的值（例如，1.5）将更强烈地惩罚重复，而更低的值（例如，0.9）将更加宽容。（默认：1.1）
+    "temperature" : 0.75, #模型温度。提高温度会使模型回答更具创造性。（默认：0.8）
     "seed" : random.randint(1,sys.maxsize) #设置用于生成的随机数种子。将此设置为特定数字将使模型对相同的提示生成相同的文本。（默认：0）
 }
 
@@ -99,6 +103,15 @@ def ollama_translate(tran_type,text):
 ## 根据长文本生成一句话概括
 def ollama_summarize(text):
     prompt = '你是一位阅读专家，现在需要你发挥你的工作能力，分析要点将下面的段落概括成100字左右，注意不要加入任何自然语言，这是你要总结的段落:' + text
+    response = ollama.generate(model='qwen2.5',prompt=prompt,options=module_config)
+    restext = response["response"]
+    logging.info("调用ollama生成概括:" + restext)
+    return restext
+
+def ollama_summarize_html(text,title):
+    chinese_chars = re.findall(r'[\u4e00-\u9fff]', text)
+    result = ''.join(chinese_chars)
+    prompt = "我从一个百度搜索的页面里提取出了所有的汉字,现在需要你根据所有汉字理解这个百度搜索页面是搜的这件事，将这件事概括成五十字左右的一句话。这个页面里可能有别的事件的描述，我需要你围绕:" + title +"这件事进行概括，下面是所有汉字:\n" + result + "\n\n最后再次提醒!只需要50字左右的话，不要用markdown等格式，只需要文字。句式最好是某人在某地因为某个原因干了某件事得到了什么样的结果，当事方有无做了什么回应。"
     response = ollama.generate(model='qwen2.5',prompt=prompt,options=module_config)
     restext = response["response"]
     logging.info("调用ollama生成概括:" + restext)
