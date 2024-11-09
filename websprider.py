@@ -51,16 +51,12 @@ def get_baidu_hotpot():
         baidu_hotpots.append(temp_dirc)
     
     print(baidu_hotpots)
+    
+    
+def get_weibo_hotpot():
+    print("微博热搜")
+    
+    
 
 if __name__ == '__main__':
     get_baidu_hotpot()
-
-
-
-#国外热点追踪
-## 获取推特热搜及前十条正文
-## 获取BBC各板块的前十条新闻标题及正文
-## 获取CNN各板块的前十条新闻标题及正文
-## https://cn.wsj.com/ 华尔街日报
-## https://m.cn.nytimes.com/ 纽约时报
-
