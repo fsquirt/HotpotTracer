@@ -87,7 +87,7 @@ def get_weibo_hotpot():
         weibo_hotpots.append(temp_dirc)
 
     print(weibo_hotpots)
-    #return weibo_hotpots
+    return weibo_hotpots
 
 if __name__ == '__main__':
     get_weibo_hotpot()
