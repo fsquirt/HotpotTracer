@@ -89,5 +89,24 @@ def get_weibo_hotpot():
     print(weibo_hotpots)
     return weibo_hotpots
 
+def get_douyin_hotpot():
+    douyin_header = {
+        "Agw-Js-Conv": "str",
+        "ec-Ch-Ua-Platform": "Windows",
+        "Accept-Language": "zh-CN,zh;q=0.9",
+        "Accept": "application/json, text/plain, */*",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36"
+    }
+    #热点榜
+    hot_req = requests.get("https://www.iesdouyin.com/web/api/v2/hotsearch/billboard/word/",headers=douyin_header,verify=False)
+    hot_req.encoding = 'utf-8'
+    douyin_hot_orginal = json.loads(hot_req.text)
+    douyin_hot_orginal = douyin_hot_orginal["word_list"]
+    for i in douyin_hot_orginal:
+        print(i["word"])
+        
+    #娱乐榜
+    #社会榜
+
 if __name__ == '__main__':
-    get_weibo_hotpot()
+    get_douyin_hotpot()
