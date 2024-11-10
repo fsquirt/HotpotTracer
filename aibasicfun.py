@@ -50,8 +50,8 @@ def init_global():
     if(test_ollama() == 1):
         return 1
     
-    ollama_translate(1,"你说得对，但是《原神》是由上海米哈游网络科技股份有限公司制作发行的一款开放世界冒险游戏，游戏发生在一个被称作“提瓦特”的幻想世界，在这里，被神选中的人将被授予“神之眼”，导引元素之力。玩家将扮演一位名为“旅行者”的神秘角色，在自由的旅行中邂逅性格各异、能力独特的同伴们，和他们一起击败强敌，找回失散的亲人——同时，逐步发掘“原神”的真相。")
-    ollama_translate(2,"Make American Great Again!")
+    #ollama_translate(1,"你说得对，但是《原神》是由上海米哈游网络科技股份有限公司制作发行的一款开放世界冒险游戏，游戏发生在一个被称作“提瓦特”的幻想世界，在这里，被神选中的人将被授予“神之眼”，导引元素之力。玩家将扮演一位名为“旅行者”的神秘角色，在自由的旅行中邂逅性格各异、能力独特的同伴们，和他们一起击败强敌，找回失散的亲人——同时，逐步发掘“原神”的真相。")
+    #ollama_translate(2,"Make American Great Again!")
     
     return 0
 
@@ -76,15 +76,15 @@ def test_ollama():
         response = ollama.generate(model='qwen2.5', prompt='注意：不要生成markdown! 下面是问题:你是谁？',options=module_config)
         logging.info(response["response"])
         
-        response = ollama.generate(model='qwen2.5', prompt='注意：不要生成markdown! 下面是问题:你有没有感情？',options=module_config)
-        logging.info(response["response"])
+        #response = ollama.generate(model='qwen2.5', prompt='注意：不要生成markdown! 下面是问题:你有没有感情？',options=module_config)
+        #logging.info(response["response"])
         return 0
     except:
         logging.info("ollama服务未启动")
         return 1
 
 #基本功能
-## 调用ollama进行英译中
+## ollama进行英译中
 def ollama_translate(tran_type,text):
     #tran_type 1 中译英 2 英译中
     if(tran_type == 1):
@@ -105,7 +105,7 @@ def ollama_summarize(text):
     prompt = '你是一位阅读专家，现在需要你发挥你的工作能力，分析要点将下面的段落概括成100字左右，注意不要加入任何自然语言，这是你要总结的段落:' + text
     response = ollama.generate(model='qwen2.5',prompt=prompt,options=module_config)
     restext = response["response"]
-    logging.info("调用ollama生成概括:" + restext)
+    logging.info("ollama生成概括:" + restext)
     return restext
 
 def ollama_summarize_html_baidu(text,title):
@@ -114,7 +114,7 @@ def ollama_summarize_html_baidu(text,title):
     prompt = "我从一个百度搜索的页面里提取出了所有的汉字,现在需要你根据所有汉字理解这个百度搜索页面是搜的这件事，将这件事概括成五十字左右的一句话。这个页面里可能有别的事件的描述，我需要你围绕:" + title +"这件事进行概括，下面是所有汉字:\n" + result + "\n\n最后再次提醒!只需要50字左右的话，不要用markdown等格式，只需要文字。句式最好是某人在某地因为某个原因干了某件事得到了什么样的结果，当事方有无做了什么回应。"
     response = ollama.generate(model='qwen2.5',prompt=prompt,options=module_config)
     restext = response["response"]
-    logging.info("调用ollama生成概括:" + restext)
+    logging.info("ollama生成概括:" + restext)
     return restext
 
 def ollama_summarize_html_weibo(text,title):
@@ -123,5 +123,5 @@ def ollama_summarize_html_weibo(text,title):
     prompt = "我从一个微博搜索的页面里提取出了所有的汉字,现在需要你根据所有汉字理解这个微博搜索页面是搜的这件事，将这件事概括成一百个字左右的一段话。这个页面里可能有别的事件的描述或者别的无关的事情，我需要你围绕:" + title +"这件事进行概括，下面是所有汉字:\n" + result + "\n\n最后再次提醒!只需要一百个字左右的一段话，不要用markdown等格式，只需要文字。句式最好是某人在某地因为某个原因干了某件事得到了什么样的结果，当事方有无做了什么回应网友的反应以及其他一些必要的内容。"
     response = ollama.generate(model='qwen2.5',prompt=prompt,options=module_config)
     restext = response["response"]
-    logging.info("调用ollama生成概括:" + restext)
+    logging.info("ollama生成概括:" + restext)
     return restext

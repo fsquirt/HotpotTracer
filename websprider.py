@@ -42,7 +42,6 @@ def get_baidu_hotpot():
             req = requests.get(i["rawUrl"],headers=req_header,verify=False,data=None)
             req.encoding = 'utf-8'
             i["desc"] = aibasicfun.ollama_summarize_html_baidu(req.text,i["query"])
-            i["desc"] = "AI:" + i["desc"]
         #print("热点"+ str(i["index"]) + ":" + i["query"])
         #print("描述:" + str(i["desc"]).replace("\n",""))
         #print("热力指数:" + i["hotScore"])
@@ -90,7 +89,7 @@ def get_weibo_hotpot():
     return weibo_hotpots
 
 def get_douyin_hotpot():
-    douyin_hotpot = {"热点榜":[],"娱乐榜":[],"社会榜":[]}
+    douyin_hotpot = []
     
     douyin_header = {
         "Agw-Js-Conv": "str",
@@ -105,8 +104,9 @@ def get_douyin_hotpot():
     douyin_hot_orginal = json.loads(hot_req.text)
     douyin_hot_orginal = douyin_hot_orginal["word_list"]
     for i in douyin_hot_orginal:
-        douyin_hotpot["热点榜"].append(i["word"])
-    print(douyin_hotpot["热点榜"])
+        douyin_hotpot.append(i["word"])
+    print(douyin_hotpot)
+    return douyin_hotpot
 
 if __name__ == '__main__':
     get_douyin_hotpot()
