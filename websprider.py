@@ -41,7 +41,7 @@ def get_baidu_hotpot():
         if(i["desc"] == ""):
             req = requests.get(i["rawUrl"],headers=req_header,verify=False,data=None)
             req.encoding = 'utf-8'
-            i["desc"] = aibasicfun.ollama_summarize_html(req.text,i["query"])
+            i["desc"] = aibasicfun.ollama_summarize_html_baidu(req.text,i["query"])
             i["desc"] = "AI:" + i["desc"]
         #print("热点"+ str(i["index"]) + ":" + i["query"])
         #print("描述:" + str(i["desc"]).replace("\n",""))
@@ -51,12 +51,43 @@ def get_baidu_hotpot():
         baidu_hotpots.append(temp_dirc)
     
     print(baidu_hotpots)
-    
+    return baidu_hotpots
     
 def get_weibo_hotpot():
-    print("微博热搜")
+    weibo_header = {
+        "Cookie": "XSRF-TOKEN=HK6Q9FClbkDAzP5vr0laU22o; SCF=Au8xBk4YckYe7JWAMapHOYhkVoM51dJXjBL0cdXtOmBYFoo_dkF8Eqj5L4J1ZPdbb0fkE2_8x91VHPS8zpSZ8b0.; SUB=_2A25KNBT9DeRhGeFK61AU-SrFyTqIHXVpSCg1rDV8PUNbmtAGLVDjkW9NQ7EcQYZZLtj8WXFpwXWabVZG2rSfSTze; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWvYDNdpV2BXkfTQjjKkbup5NHD95QNSh5ESK.X1KzcWs4Dqcjci--ci-zEiK.4i--ci-ihi-27i--NiKnpi-z7i--fiKnpiKLWi--4i-2EiK.Ri--fi-88i-zc; ALF=02_1733816751; _s_tentry=passport.weibo.com; Apache=7720083282596.335.1731224775174; SINAGLOBAL=7720083282596.335.1731224775174; ULV=1731224775177:1:1:1:7720083282596.335.1731224775174:; WBPSESS=iCPQ2msLZgwMRitkN7q-S-YlUbGx_iPrWO4h_3hxOFBqoI1fxri4PevHtWmUy6EYjwa5RYkNT_7tiPVkSJBke9EX6e7paUxAThRLgb_2oQaIQK9dk_7rMXZT8KctDWHajcZnaSDtE-P_UkQW08_qUw==",
+        "Sec-Ch-Ua-Platform": "Windows",
+        "Accept-Language": "zh-CN,zh;q=0.9",
+        "Server-Version": "v2024.11.04.1",
+        "Sec-Ch-Ua-Mobile": "?0",
+        "X-Requested-With": "XMLHttpRequest",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Client-Version": "v2.46.27",
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Dest": "empty",
+        "Referer": "https://weibo.com/",
+        "Priority": "u=1, i"
+    }
     
+    weibo_hotpots = []
     
+    req = requests.get("https://weibo.com/ajax/side/searchBand?type=hot&last_tab=hot",headers=weibo_header,verify=False)
+    req.encoding = 'utf-8'
+    weibo_hot_orginal = json.loads(req.text)
+    weibo_hot_orginal = weibo_hot_orginal["data"]["realtime"]
+    for i in weibo_hot_orginal:
+        desc_req = requests.get(str("https://s.weibo.com/weibo?q=" + i["word"]),headers=weibo_header,verify=False)
+        desc_req.encoding = 'utf-8'
+        #print(desc_req.text)
+        weibo_desc_temp = aibasicfun.ollama_summarize_html_weibo(desc_req.text,i["word"])
+        #print(i["word"] + " " + weibo_desc_temp)
+        temp_dirc = {"描述:":weibo_desc_temp.replace("\n",""),"关键词:":str(i["word"])}
+        weibo_hotpots.append(temp_dirc)
+
+    print(weibo_hotpots)
+    #return weibo_hotpots
 
 if __name__ == '__main__':
-    get_baidu_hotpot()
+    get_weibo_hotpot()

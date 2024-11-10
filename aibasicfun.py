@@ -108,10 +108,19 @@ def ollama_summarize(text):
     logging.info("调用ollama生成概括:" + restext)
     return restext
 
-def ollama_summarize_html(text,title):
+def ollama_summarize_html_baidu(text,title):
     chinese_chars = re.findall(r'[\u4e00-\u9fff]', text)
     result = ''.join(chinese_chars)
     prompt = "我从一个百度搜索的页面里提取出了所有的汉字,现在需要你根据所有汉字理解这个百度搜索页面是搜的这件事，将这件事概括成五十字左右的一句话。这个页面里可能有别的事件的描述，我需要你围绕:" + title +"这件事进行概括，下面是所有汉字:\n" + result + "\n\n最后再次提醒!只需要50字左右的话，不要用markdown等格式，只需要文字。句式最好是某人在某地因为某个原因干了某件事得到了什么样的结果，当事方有无做了什么回应。"
+    response = ollama.generate(model='qwen2.5',prompt=prompt,options=module_config)
+    restext = response["response"]
+    logging.info("调用ollama生成概括:" + restext)
+    return restext
+
+def ollama_summarize_html_weibo(text,title):
+    chinese_chars = re.findall(r'[\u4e00-\u9fff]', text)
+    result = ''.join(chinese_chars)
+    prompt = "我从一个微博搜索的页面里提取出了所有的汉字,现在需要你根据所有汉字理解这个微博搜索页面是搜的这件事，将这件事概括成一百个字左右的一段话。这个页面里可能有别的事件的描述或者别的无关的事情，我需要你围绕:" + title +"这件事进行概括，下面是所有汉字:\n" + result + "\n\n最后再次提醒!只需要一百个字左右的一段话，不要用markdown等格式，只需要文字。句式最好是某人在某地因为某个原因干了某件事得到了什么样的结果，当事方有无做了什么回应网友的反应以及其他一些必要的内容。"
     response = ollama.generate(model='qwen2.5',prompt=prompt,options=module_config)
     restext = response["response"]
     logging.info("调用ollama生成概括:" + restext)
