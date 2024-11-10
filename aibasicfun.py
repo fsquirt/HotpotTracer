@@ -42,6 +42,7 @@ def init_global():
     x, y = pyautogui.position()
     threads_count = sum([p.num_threads() for p in psutil.process_iter()])
     base_seed = int((int(formatted_time)/int(threads_count)) * (x + y))
+    base_seed = base_seed / 2209 
     logging.info("强随机种子:" + str(base_seed))
     random.seed(base_seed)
     

@@ -10,18 +10,19 @@ def what_happening():
     current_time = now.strftime("%y/%m/%d-%H:%M:%S")
     print(f"当前时间: {current_time}")
     
-    t = 0
+    baidu_hotdata = websprider.get_baidu_hotpot()
     weibo_hotdata = websprider.get_weibo_hotpot()
+    
+    t = 0
     for i in weibo_hotdata:
-        print(str(i["关键词:"]) + "," + str(i["描述:"]).replace(",","，")+ "," +"微博"+ "," +str(t) + "," + str(current_time))
+        #print(str(i["关键词:"]) + "," + str(i["描述:"]).replace(",","，")+ "," +"微博"+ "," +str(t) + "," + str(current_time))
         t = t + 1
         with open("hotdata.csv", mode="a", encoding="utf-8") as file:
             file.write(str(i["关键词:"]) + "," + str(i["描述:"]).replace(",","，")+ "," +"微博"+ "," +str(t) + "," + str(current_time) + "\n")
     
     t = 0
-    baidu_hotdata = websprider.get_baidu_hotpot()
     for i in baidu_hotdata:
-        print(str(i["关键词:"]) + "," + str(i["描述:"]).replace(",","，")+ "," +"百度"+ "," +str(t) + "," + str(current_time))
+        #print(str(i["关键词:"]) + "," + str(i["描述:"]).replace(",","，")+ "," +"百度"+ "," +str(t) + "," + str(current_time))
         t = t + 1
         with open("hotdata.csv", mode="a", encoding="utf-8") as file:
             file.write(str(i["关键词:"]) + "," + str(i["描述:"]).replace(",","，")+ "," +"百度"+ "," +str(t) + "," + str(current_time) + "\n")

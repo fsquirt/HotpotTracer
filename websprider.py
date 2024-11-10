@@ -5,6 +5,7 @@ import re
 import json
 from urllib.parse import unquote
 import aibasicfun
+from tqdm import tqdm
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -37,7 +38,7 @@ def get_baidu_hotpot():
     
     baidu_hotpots = []
 
-    for i in htlist:
+    for i in tqdm(htlist):
         if(i["desc"] == ""):
             req = requests.get(i["rawUrl"],headers=req_header,verify=False,data=None)
             req.encoding = 'utf-8'
@@ -49,7 +50,7 @@ def get_baidu_hotpot():
         temp_dirc = {"描述:":str(i["desc"]).replace("\n",""),"关键词:":str(i["query"])}
         baidu_hotpots.append(temp_dirc)
     
-    print(baidu_hotpots)
+    #print(baidu_hotpots)
     return baidu_hotpots
     
 def get_weibo_hotpot():
@@ -76,7 +77,7 @@ def get_weibo_hotpot():
     req.encoding = 'utf-8'
     weibo_hot_orginal = json.loads(req.text)
     weibo_hot_orginal = weibo_hot_orginal["data"]["realtime"]
-    for i in weibo_hot_orginal:
+    for i in tqdm(weibo_hot_orginal):
         desc_req = requests.get(str("https://s.weibo.com/weibo?q=" + i["word"]),headers=weibo_header,verify=False)
         desc_req.encoding = 'utf-8'
         #print(desc_req.text)
@@ -85,7 +86,7 @@ def get_weibo_hotpot():
         temp_dirc = {"描述:":weibo_desc_temp.replace("\n",""),"关键词:":str(i["word"])}
         weibo_hotpots.append(temp_dirc)
 
-    print(weibo_hotpots)
+    #print(weibo_hotpots)
     return weibo_hotpots
 
 def get_douyin_hotpot():
@@ -105,7 +106,8 @@ def get_douyin_hotpot():
     douyin_hot_orginal = douyin_hot_orginal["word_list"]
     for i in douyin_hot_orginal:
         douyin_hotpot.append(i["word"])
-    print(douyin_hotpot)
+        
+    #print(douyin_hotpot)
     return douyin_hotpot
 
 if __name__ == '__main__':
