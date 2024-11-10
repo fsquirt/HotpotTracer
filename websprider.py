@@ -90,6 +90,8 @@ def get_weibo_hotpot():
     return weibo_hotpots
 
 def get_douyin_hotpot():
+    douyin_hotpot = {"热点榜":[],"娱乐榜":[],"社会榜":[]}
+    
     douyin_header = {
         "Agw-Js-Conv": "str",
         "ec-Ch-Ua-Platform": "Windows",
@@ -103,8 +105,9 @@ def get_douyin_hotpot():
     douyin_hot_orginal = json.loads(hot_req.text)
     douyin_hot_orginal = douyin_hot_orginal["word_list"]
     for i in douyin_hot_orginal:
-        print(i["word"])
-        
+        douyin_hotpot["热点榜"].append(i["word"])
+    print(douyin_hotpot["热点榜"])
+    
     #娱乐榜
     #社会榜
 
