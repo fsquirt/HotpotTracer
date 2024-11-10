@@ -107,9 +107,6 @@ def get_douyin_hotpot():
     for i in douyin_hot_orginal:
         douyin_hotpot["热点榜"].append(i["word"])
     print(douyin_hotpot["热点榜"])
-    
-    #娱乐榜
-    #社会榜
 
 if __name__ == '__main__':
     get_douyin_hotpot()
