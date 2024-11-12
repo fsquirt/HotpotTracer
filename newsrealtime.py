@@ -13,8 +13,8 @@ sina_header = {
 
 writed_news_latest_id = 0
 
-#获取小标题
 def get_news_title(text):
+    #获取小标题
     matches = re.findall(r"【(.*?)】", text)
     if(len(matches) == 0):
         return ""
@@ -22,6 +22,7 @@ def get_news_title(text):
         return matches[0]
     
 def read_latest_id():
+    #获取最新ID 如果获取不到，那就是第一次写数据，第一次请求的数据就会都写上
     global writed_news_latest_id
     try:
         with open("id.txt","r",encoding="utf-8") as file:
@@ -45,11 +46,12 @@ def main():
         print("当前服务器时间:" + str(sina_server_time) + "   最新ID：" + str(temp_latest_id))
         #判断有无内容更新
         if(temp_latest_id <= writed_news_latest_id):
+            #如果获取到的最新ID小于等于已经写入的最新ID 那就是没有更新
             pass
         else:
-            #print("有更新")
             for i in news_data:
                 if(i["id"] <= writed_news_latest_id):
+                    #一直写 直到要写的新闻ID小于等于已经写入的ID 那就是这条新闻已经写进去了 于是退出循环
                     break
                 
                 #【小标题】 小标题处理
@@ -69,11 +71,11 @@ def main():
                         file.write(str(i["id"]) + "," + str(i["create_time"]) + "," + i["rich_text"] + "\n")
                     
             writed_news_latest_id = temp_latest_id
+            #更新最新ID
             with open("id.txt","w",encoding="utf-8") as file:
                 file.write(str(writed_news_latest_id))
             
-        time.sleep(10)
-        #exit()
+        time.sleep(30)
 
 if __name__ == '__main__':
     main()
