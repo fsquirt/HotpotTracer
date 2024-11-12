@@ -11,8 +11,7 @@ sina_header = {
     "Referer": "https://finance.sina.com.cn/"
 }
 
-writed_news_latest_id = int(input("写入的最新ID："))
-frist_write = True
+writed_news_latest_id = 0
 
 #获取小标题
 def get_news_title(text):
@@ -21,9 +20,18 @@ def get_news_title(text):
         return ""
     else:
         return matches[0]
+    
+def read_latest_id():
+    global writed_news_latest_id
+    try:
+        with open("id.txt","r",encoding="utf-8") as file:
+            writed_news_latest_id = int(file.read())
+    except:
+        writed_news_latest_id = 0
 
 def main():
     global writed_news_latest_id
+    read_latest_id()
     
     while(True):
         url = "https://zhibo.sina.com.cn/api/zhibo/feed?callback=jQuery1112032572744792696806_1731412294007&page=1&page_size=20&zhibo_id=152&tag_id=0&dire=f&dpc=1&pagesize=20&id=3868085&"
@@ -61,6 +69,8 @@ def main():
                         file.write(str(i["id"]) + "," + str(i["create_time"]) + "," + i["rich_text"] + "\n")
                     
             writed_news_latest_id = temp_latest_id
+            with open("id.txt","w",encoding="utf-8") as file:
+                file.write(str(writed_news_latest_id))
             
         time.sleep(10)
         #exit()
