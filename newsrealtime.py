@@ -11,7 +11,7 @@ sina_header = {
     "Referer": "https://finance.sina.com.cn/"
 }
 
-writed_news_latest_id = 0
+writed_news_latest_id = int(input("写入的最新ID："))
 frist_write = True
 
 #获取小标题
@@ -23,8 +23,8 @@ def get_news_title(text):
         return matches[0]
 
 def main():
-    global frist_write
     global writed_news_latest_id
+    
     while(True):
         url = "https://zhibo.sina.com.cn/api/zhibo/feed?callback=jQuery1112032572744792696806_1731412294007&page=1&page_size=20&zhibo_id=152&tag_id=0&dire=f&dpc=1&pagesize=20&id=3868085&"
         req = requests.get(url)
@@ -36,12 +36,12 @@ def main():
         news_data = req_json["result"]["data"]["feed"]["list"]
         print("当前服务器时间:" + str(sina_server_time) + "   最新ID：" + str(temp_latest_id))
         #判断有无内容更新
-        if(temp_latest_id == writed_news_latest_id):
+        if(temp_latest_id <= writed_news_latest_id):
             pass
         else:
             #print("有更新")
             for i in news_data:
-                if(i["id"] == writed_news_latest_id):
+                if(i["id"] <= writed_news_latest_id):
                     break
                 
                 #【小标题】 小标题处理
@@ -49,19 +49,21 @@ def main():
                 little_title = get_news_title(i["rich_text"])
                 if(i != ""):
                     i["rich_text"] = re.sub(r"【.*?】", "", i["rich_text"])
-
-                #正文内容半角换全角
-                i["rich_text"] = str(i["rich_text"]).replace(",", "，")
                 
-                #写入文件，使得第一行是最新内容
-                with open("sinarealtime.csv","r+", encoding="utf-8") as file:
-                    content = file.read()
-                    file.seek(0)
-                    file.write(str(i["id"]) + "," + str(i["create_time"]) + ","  + little_title + "," + i["rich_text"] + "\n" + content)
+                #半角换全角
+                i["rich_text"] = str(i["rich_text"]).replace(",","，")
+                
+                #写入文件
+                with open("sinarealtime.csv","a+", encoding="utf-8") as file:
+                    if(little_title != ""):
+                        file.write(str(i["id"]) + "," + str(i["create_time"]) + ","  + little_title + "," + i["rich_text"] + "\n")
+                    else:
+                        file.write(str(i["id"]) + "," + str(i["create_time"]) + "," + i["rich_text"] + "\n")
                     
             writed_news_latest_id = temp_latest_id
             
         time.sleep(10)
+        #exit()
 
 if __name__ == '__main__':
     main()
