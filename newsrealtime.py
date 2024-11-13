@@ -60,8 +60,9 @@ def main():
                 if(i != ""):
                     i["rich_text"] = re.sub(r"【.*?】", "", i["rich_text"])
                 
-                #半角换全角
+                #半角换全角 去掉回车
                 i["rich_text"] = str(i["rich_text"]).replace(",","，")
+                i["rich_text"] = str(i["rich_text"]).replace("\n","")
                 
                 #写入文件
                 with open("sinarealtime.csv","a+", encoding="utf-8") as file:
