@@ -1,11 +1,18 @@
 import pandas as pd
-import jieba
 import csv
 import datetime
 import re
 import string
+import thulac
+from tqdm import tqdm
+
+#n/名词 np/人名 ns/地名 ni/机构名 nz/其它专名 i/习语 j/简称 
+useful_word_type = ["n","np","ns","ni","nz","i","j"]
+thu1 = thulac.thulac(filt=True)
+result_word = []
 
 def text_noise_fucker(text):
+    #去除噪声 没啥用 thulac有这功能 加上也不影响
     try:
         text_list = str(text).split("，")
         if((text_list[0] == "近日") or text_list[0] == "近期"):
@@ -31,22 +38,22 @@ def text_noise_fucker(text):
         return text.replace(" ","")
 
 def main():
+    global result_word
     print("读取数据")
     #读取热搜数据
     fileHandler = open("hotdata.csv","r",encoding="utf-8")
     fileHandler_line = fileHandler.readlines()
-
-    result = []
     
-    for i in fileHandler_line:
+    for i in tqdm(fileHandler_line):
         i = i.split(",")
         sentense = i[0] + "," + text_noise_fucker(i[1])
-        text = re.sub(r"[^\w\s]", "", sentense)
-        wordlist = jieba.cut(text, HMM=True)
-        #filtered_words = [word for word in wordlist if len(word) >= 3]
-        result.extend(wordlist)
+        #https://github.com/thunlp/THULAC-Python?tab=readme-ov-file#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F
+        text = thu1.cut(sentense,text=False)
+        for i in text:
+            if(i[1] in useful_word_type):
+                result_word.append(i[0])  
 
-    print(result)
+    print(result_word)
 
     fileHandler.close()
     
